@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify
 from flask_cors import CORS
-from .utils import get_albums, get_images
+from .utils import get_albums, get_images, spotify_feed
 
 main = Blueprint("main", __name__)
 
@@ -14,19 +14,25 @@ def index():
 def albums():
     try:
         results = get_albums()
-        
+
         return jsonify(results)
     except Exception as e:
         print(e)
         return jsonify({"error": "There was a problem with the data you provided."})
 
-@main.route('/<album>/images', methods=['GET'])
+@main.route('/images/<album>', methods=['GET'])
 def pictures(album):
     try:
-        return jsonify(get_images(album))
+        results = get_images(album)
+
+        return jsonify(results)
     except Exception as e:
         print(e)
         return jsonify({"error": "There was a problem with the data you provided."})
+
+@main.route('/music/<count>')
+def music(count):
+    return spotify_feed(count)
 
 @main.app_errorhandler(403)
 @main.app_errorhandler(404)
