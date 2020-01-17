@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify
 from flask_cors import CORS
-from .utils import get_albums, get_images, spotify_feed
+from .utils import get_albums, get_images, spotify_feed, github_feed
 
 main = Blueprint("main", __name__)
 
@@ -33,6 +33,10 @@ def pictures(album):
 @main.route('/music/<count>')
 def music(count):
     return spotify_feed(count)
+
+@main.route('/github/<count>')
+def githubjson(count):
+    return jsonify(github_feed(count))
 
 @main.app_errorhandler(403)
 @main.app_errorhandler(404)
